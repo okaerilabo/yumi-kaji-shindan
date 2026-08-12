@@ -1,0 +1,626 @@
+<style>
+  :root{
+    --paper:#fbf1e2;
+    --paper-2:#ffffff;
+    --ink:#3b2a1e;
+    --ink-soft:#77604a;
+    --ink-faint:#ab9576;
+    --accent-base:#e8791e;
+    --accent-base-2:#d5691a;
+    --line:#ecdcbe;
+
+    --sun-accent:#e8791e;   --sun-tint:#fbe4cc;
+    --moon-accent:#8c5a3c;  --moon-tint:#f1ded0;
+    --earth-accent:#93893c; --earth-tint:#f1ecd3;
+
+    --accent: var(--accent-base);
+    --card-bg: var(--paper-2);
+    --shadow: 0 18px 40px -20px rgba(90,58,22,0.28);
+  }
+
+
+  *{ box-sizing:border-box; }
+
+  .shindan-app{
+    background:var(--paper);
+    color:var(--ink);
+    font-family:"游ゴシック体","Yu Gothic","Hiragino Sans","Hiragino Kaku Gothic ProN",sans-serif;
+    line-height:1.8;
+    min-height:100%;
+    padding:0 0 64px;
+    -webkit-font-smoothing:antialiased;
+  }
+
+  .wrap{ max-width:420px; margin:0 auto; padding:0 22px; }
+
+  .hero{
+    padding:56px 22px 40px;
+    text-align:center;
+    border-bottom:1px solid var(--line);
+  }
+  .eyebrow{
+    font-size:12px;
+    letter-spacing:.28em;
+    color:var(--ink-faint);
+    margin:0 0 14px;
+  }
+  .hero h1{
+    font-family:"Hiragino Maru Gothic ProN","BIZ UDPGothic","游ゴシック体","Yu Gothic",sans-serif;
+    font-weight:600;
+    font-size:clamp(28px,7vw,36px);
+    line-height:1.5;
+    margin:0 0 18px;
+    text-wrap:balance;
+    color:var(--ink);
+  }
+  .hero h1 em{
+    font-style:normal;
+    color:var(--accent-base);
+  }
+  .hero p{
+    max-width:32ch;
+    margin:0 auto 30px;
+    color:var(--ink-soft);
+    font-size:15px;
+  }
+  .start-btn{
+    display:inline-block;
+    background:var(--accent-base);
+    color:var(--paper);
+    border:none;
+    font-family:inherit;
+    font-size:15px;
+    font-weight:700;
+    letter-spacing:.06em;
+    padding:15px 34px;
+    border-radius:999px;
+    cursor:pointer;
+    box-shadow:var(--shadow);
+    transition:transform .15s ease, background .2s ease;
+  }
+  .start-btn:hover{ background:var(--accent-base-2); }
+  .start-btn:active{ transform:scale(.97); }
+  .start-btn:focus-visible{ outline:3px solid var(--moon-accent); outline-offset:3px; }
+
+  section{ padding:40px 22px; }
+
+  .step-label{
+    font-size:12px;
+    letter-spacing:.22em;
+    color:var(--ink-faint);
+    margin:0 0 8px;
+  }
+  .step-title{
+    font-family:"Hiragino Maru Gothic ProN","BIZ UDPGothic","游ゴシック体","Yu Gothic",sans-serif;
+    font-size:22px;
+    margin:0 0 26px;
+    color:var(--ink);
+  }
+
+  .date-card{
+    background:var(--paper-2);
+    border:1px solid var(--line);
+    border-radius:20px;
+    padding:26px 22px 30px;
+    box-shadow:var(--shadow);
+  }
+  .date-fields{
+    display:grid;
+    grid-template-columns:1.15fr .9fr .9fr;
+    gap:10px;
+  }
+  .field label{
+    display:block;
+    font-size:11px;
+    letter-spacing:.14em;
+    color:var(--ink-faint);
+    margin-bottom:6px;
+  }
+  select{
+    width:100%;
+    font-family:inherit;
+    font-size:15px;
+    font-variant-numeric:tabular-nums;
+    color:var(--ink);
+    background:var(--paper);
+    border:1px solid var(--line);
+    border-radius:10px;
+    padding:11px 8px;
+    appearance:none;
+    -webkit-appearance:none;
+  }
+  select:focus-visible{ outline:3px solid var(--moon-accent); outline-offset:2px; }
+
+  .diagnose-btn{
+    width:100%;
+    margin-top:22px;
+    background:var(--ink);
+    color:var(--paper);
+    border:none;
+    font-family:inherit;
+    font-size:15px;
+    font-weight:700;
+    letter-spacing:.08em;
+    padding:16px;
+    border-radius:12px;
+    cursor:pointer;
+    transition:opacity .2s ease;
+  }
+  .diagnose-btn:disabled{ opacity:.4; cursor:not-allowed; }
+  .diagnose-btn:focus-visible{ outline:3px solid var(--moon-accent); outline-offset:3px; }
+  .error-msg{
+    font-size:13px;
+    color:var(--sun-accent);
+    margin-top:10px;
+    min-height:1em;
+  }
+
+  .result{
+    display:none;
+  }
+  .result.is-visible{ display:block; }
+
+  .result-card{
+    background:var(--card-bg);
+    border:1px solid var(--line);
+    border-radius:24px;
+    padding:34px 24px 30px;
+    box-shadow:var(--shadow);
+    opacity:0;
+    transform:translateY(14px) scale(.98);
+    animation:reveal .6s cubic-bezier(.2,.7,.3,1) forwards;
+  }
+  @keyframes reveal{ to{ opacity:1; transform:translateY(0) scale(1); } }
+  @media (prefers-reduced-motion:reduce){
+    .result-card{ animation:none; opacity:1; transform:none; }
+  }
+
+  .emblem{ display:block; margin:0 auto 18px; }
+  .emblem circle{ fill:none; stroke:var(--accent); stroke-width:2.5; }
+  .emblem text{
+    font-family:"Hiragino Maru Gothic ProN","BIZ UDPGothic","游ゴシック体","Yu Gothic",sans-serif;
+    font-size:34px;
+    fill:var(--accent);
+    text-anchor:middle;
+    dominant-baseline:central;
+  }
+
+  .zodiac-line{
+    text-align:center;
+    font-size:12px;
+    letter-spacing:.16em;
+    color:var(--ink-faint);
+    margin:0 0 6px;
+  }
+  .type-name{
+    font-family:"Hiragino Maru Gothic ProN","BIZ UDPGothic","游ゴシック体","Yu Gothic",sans-serif;
+    text-align:center;
+    font-size:28px;
+    font-weight:600;
+    color:var(--accent);
+    margin:0 0 4px;
+    text-wrap:balance;
+  }
+  .type-kana{
+    text-align:center;
+    font-size:13px;
+    color:var(--ink-faint);
+    margin:0 0 24px;
+  }
+
+  .result-block{ margin:0 0 22px; }
+  .result-block h3{
+    font-size:12px;
+    letter-spacing:.14em;
+    color:var(--ink-faint);
+    margin:0 0 8px;
+    display:flex;
+    align-items:center;
+    gap:8px;
+  }
+  .result-block h3::before{
+    content:"";
+    width:14px; height:1px;
+    background:var(--accent);
+    display:inline-block;
+  }
+  .result-block p{
+    font-size:14.5px;
+    color:var(--ink);
+    margin:0;
+  }
+
+  .recipe-grid{
+    display:grid;
+    grid-template-columns:repeat(3, 1fr);
+    gap:8px;
+  }
+  .recipe-card{
+    display:flex;
+    flex-direction:column;
+    align-items:stretch;
+    justify-content:flex-start;
+    width:100%;
+    background:none;
+    border:none;
+    padding:0;
+    cursor:pointer;
+    font-family:inherit;
+  }
+  .recipe-card img{
+    width:100%;
+    aspect-ratio:3/4;
+    object-fit:cover;
+    border-radius:10px;
+    border:1px solid var(--line);
+    display:block;
+  }
+  .recipe-card span{
+    display:block;
+    margin-top:6px;
+    font-size:11px;
+    line-height:1.4;
+    color:var(--ink);
+    text-align:center;
+  }
+  .recipe-hint{
+    font-size:12px;
+    color:var(--ink-faint);
+    margin:10px 0 0;
+  }
+
+  .lightbox{
+    display:none;
+    position:absolute;
+    left:0;
+    right:0;
+    background:rgba(20,14,8,0.85);
+    z-index:100;
+    padding:24px;
+    align-items:center;
+    justify-content:center;
+    box-sizing:border-box;
+  }
+  .lightbox.is-visible{ display:flex; }
+  .lightbox-inner{
+    max-width:480px;
+    width:100%;
+  }
+  .lightbox-inner img{
+    width:100%;
+    border-radius:14px;
+    display:block;
+  }
+  .lightbox-caption{
+    text-align:center;
+    color:#f5e6cf;
+    font-size:13px;
+    margin:14px 0 0;
+  }
+  .lightbox-close{
+    display:block;
+    margin:16px auto 0;
+    background:rgba(255,255,255,0.12);
+    color:#f5e6cf;
+    border:1px solid rgba(255,255,255,0.3);
+    border-radius:999px;
+    padding:10px 26px;
+    font-family:inherit;
+    font-size:13px;
+    cursor:pointer;
+  }
+
+  .advice{
+    text-align:center;
+    font-size:13.5px;
+    color:var(--ink-soft);
+    padding-top:18px;
+    border-top:1px solid var(--line);
+  }
+
+  .share-hint{
+    text-align:center;
+    font-size:12.5px;
+    color:var(--ink-faint);
+    margin:18px 0 0;
+  }
+
+  .retry-btn{
+    display:block;
+    width:100%;
+    background:none;
+    border:none;
+    color:var(--ink-faint);
+    font-family:inherit;
+    font-size:13px;
+    text-decoration:underline;
+    padding:16px 0 0;
+    cursor:pointer;
+  }
+
+  footer.credit{
+    text-align:center;
+    font-size:11px;
+    letter-spacing:.1em;
+    color:var(--ink-faint);
+    padding:28px 22px 0;
+  }
+</style>
+
+<div class="shindan-app">
+  <div class="hero">
+    <p class="eyebrow">ゆみ｜料理から叶える家事改善</p>
+    <h1>生年月日でわかる<br><em>家事タイプ</em>診断</h1>
+    <p>個性心理学の「太陽・月・地球」タイプから、あなたの家事の癖と<br>相性のいいおすすめレシピを診断します。</p>
+    <button class="start-btn" id="scrollToInput" type="button">診断をはじめる</button>
+  </div>
+
+  <section id="inputSection">
+    <div class="wrap">
+      <p class="step-label">STEP 1</p>
+      <h2 class="step-title">生年月日を入力してください</h2>
+
+      <div class="date-card">
+        <div class="date-fields">
+          <div class="field">
+            <label for="year">年</label>
+            <select id="year"></select>
+          </div>
+          <div class="field">
+            <label for="month">月</label>
+            <select id="month"></select>
+          </div>
+          <div class="field">
+            <label for="day">日</label>
+            <select id="day"></select>
+          </div>
+        </div>
+        <button class="diagnose-btn" id="diagnoseBtn" type="button">診断結果を見る</button>
+        <p class="error-msg" id="errorMsg"></p>
+      </div>
+    </div>
+  </section>
+
+  <section class="result" id="resultSection">
+    <div class="wrap">
+      <p class="step-label">STEP 2</p>
+      <h2 class="step-title">診断結果</h2>
+
+      <div class="result-card" id="resultCard">
+        <svg class="emblem" width="72" height="72" viewBox="0 0 72 72" aria-hidden="true">
+          <circle cx="36" cy="36" r="33"></circle>
+          <text x="36" y="38" id="emblemChar">陽</text>
+        </svg>
+
+        <p class="zodiac-line" id="birthLine">1993年6月15日生まれ</p>
+        <p class="type-name" id="typeName">のびのび成長タイプ</p>
+        <p class="type-kana" id="typeKana">太陽群</p>
+
+        <div class="result-block">
+          <h3>あなたの家事の癖</h3>
+          <p id="typeDesc"></p>
+        </div>
+
+        <div class="result-block">
+          <h3>おすすめの時短レシピ</h3>
+          <div class="recipe-grid" id="recipeGrid"></div>
+          <p class="recipe-hint">タップすると大きく表示されます。長押しで保存してね</p>
+        </div>
+
+        <div class="result-block">
+          <h3>隠れタイプ</h3>
+          <p id="hiddenDesc"></p>
+        </div>
+
+        <p class="advice" id="adviceLine"></p>
+
+        <p class="share-hint">📸 スクリーンショットしてストーリーズでシェアしてね</p>
+      </div>
+
+      <button class="retry-btn" id="retryBtn" type="button">生年月日を入力しなおす</button>
+    </div>
+  </section>
+
+  <footer class="credit">ゆる無添加×レンジに頼らない調理法</footer>
+
+  <div class="lightbox" id="lightbox">
+    <div class="lightbox-inner">
+      <img id="lightboxImg" src="" alt="">
+      <p class="lightbox-caption" id="lightboxCaption"></p>
+      <button class="lightbox-close" id="lightboxClose" type="button">閉じる</button>
+    </div>
+  </div>
+</div>
+
+<script>
+(function(){
+  var GROUPS = ["sun", "moon", "earth"];
+
+  var TYPES = {
+    sun: {
+      kanji:"陽", yomi:"たいよう",
+      name:"みんなを照らすパワフルタイプ",
+      desc:"明るく行動力があり、勢いに乗ると一気に家事を片づけられるタイプ。反面、注目や達成感がないとモチベーションが続きにくい。",
+      hidden:"じっとしているより、体を動かし始めた方がやる気が後からついてくるタイプです。",
+      advice:"やる気を待つより、まず1品火にかけて動き出す。",
+      recipes:[
+        {img:"images/fire_1_塩麹唐揚げ.jpg", name:"塩麹唐揚げ"},
+        {img:"images/fire_2_じゃがいもの肉巻き.jpg", name:"じゃがいもの肉巻き"},
+        {img:"images/wood_3_かぼちゃと鶏もも肉のオーブン焼き.jpg", name:"かぼちゃと鶏もも肉のオーブン焼き"}
+      ]
+    },
+    moon: {
+      kanji:"月", yomi:"つき",
+      name:"感性でととのえるタイプ",
+      desc:"気分や心の状態に敏感で、丁寧に暮らしを整えるのが得意なタイプ。反面、気持ちが乗らない日は何も手につかなくなりやすい。",
+      hidden:"栄養バランスや彩りなど「見えるもの」を整えると、気持ちも一緒に整うタイプです。",
+      advice:"100点の献立より、心が動く1品を大事にする。",
+      recipes:[
+        {img:"images/metal_1_青菜の胡麻和え.jpg", name:"青菜の胡麻和え"},
+        {img:"images/metal_3_えびと野菜のピラフ.jpg", name:"えびと野菜のピラフ"},
+        {img:"images/water_3_豆腐のネギ塩和え.jpg", name:"豆腐のネギ塩和え"}
+      ]
+    },
+    earth: {
+      kanji:"地", yomi:"ちきゅう",
+      name:"じっくり積み上げタイプ",
+      desc:"地に足がついていて、コツコツ同じことを継続するのが得意なタイプ。反面、変化やイレギュラーな家事には弱く、崩れると立て直しに時間がかかる。",
+      hidden:"平日は手を抜いていい、と自分に許可を出すと一気にラクになるタイプです。",
+      advice:"丁寧さは仕込みに。平日は手放していい。",
+      recipes:[
+        {img:"images/earth_1_白菜と豚バラの煮物.jpg", name:"白菜と豚バラの煮物"},
+        {img:"images/earth_2_ひじきの煮物.jpg", name:"ひじきの煮物"},
+        {img:"images/earth_3_切り干し大根と豚こまの煮物.jpg", name:"切り干し大根と豚こまの煮物"}
+      ]
+    }
+  };
+
+  var yearSelect = document.getElementById("year");
+  var monthSelect = document.getElementById("month");
+  var daySelect = document.getElementById("day");
+  var errorMsg = document.getElementById("errorMsg");
+  var inputSection = document.getElementById("inputSection");
+  var resultSection = document.getElementById("resultSection");
+  var resultCard = document.getElementById("resultCard");
+
+  var now = new Date();
+  var currentYear = now.getFullYear();
+  for (var y = currentYear; y >= currentYear - 90; y--) {
+    var opt = document.createElement("option");
+    opt.value = y; opt.textContent = y + "年";
+    yearSelect.appendChild(opt);
+  }
+  yearSelect.value = currentYear - 33;
+
+  for (var m = 1; m <= 12; m++) {
+    var mo = document.createElement("option");
+    mo.value = m; mo.textContent = m + "月";
+    monthSelect.appendChild(mo);
+  }
+
+  function daysInMonth(year, month) {
+    return new Date(year, month, 0).getDate();
+  }
+
+  function populateDays() {
+    var prevDay = daySelect.value;
+    daySelect.innerHTML = "";
+    var maxDay = daysInMonth(parseInt(yearSelect.value, 10), parseInt(monthSelect.value, 10) || 1);
+    for (var d = 1; d <= maxDay; d++) {
+      var opt = document.createElement("option");
+      opt.value = d; opt.textContent = d + "日";
+      daySelect.appendChild(opt);
+    }
+    if (prevDay && prevDay <= maxDay) daySelect.value = prevDay;
+  }
+  monthSelect.value = 6;
+  populateDays();
+  daySelect.value = 15;
+
+  yearSelect.addEventListener("change", populateDays);
+  monthSelect.addEventListener("change", populateDays);
+
+  document.getElementById("scrollToInput").addEventListener("click", function(){
+    inputSection.scrollIntoView({behavior:"smooth", block:"start"});
+  });
+
+  function groupOf(month){
+    var idx = ((month - 1) % 3 + 3) % 3;
+    return GROUPS[idx];
+  }
+  function hiddenGroupOf(day){
+    var idx = ((day - 1) % 3 + 3) % 3;
+    return GROUPS[idx];
+  }
+
+  document.getElementById("diagnoseBtn").addEventListener("click", function(){
+    var year = parseInt(yearSelect.value, 10);
+    var month = parseInt(monthSelect.value, 10);
+    var day = parseInt(daySelect.value, 10);
+
+    if (!year || !month || !day) {
+      errorMsg.textContent = "生年月日を選択してください。";
+      return;
+    }
+    errorMsg.textContent = "";
+
+    var group = groupOf(month);
+    var type = TYPES[group];
+    var hiddenGroup = hiddenGroupOf(day);
+    var hiddenType = TYPES[hiddenGroup];
+
+    document.getElementById("emblemChar").textContent = type.kanji;
+    document.getElementById("resultCard").setAttribute("data-element", group);
+    document.getElementById("birthLine").textContent = year + "年" + month + "月" + day + "日生まれ";
+    document.getElementById("typeName").textContent = type.name;
+    document.getElementById("typeKana").textContent = type.kanji + "（" + type.yomi + "）群";
+    document.getElementById("typeDesc").textContent = type.desc;
+    var recipeGrid = document.getElementById("recipeGrid");
+    recipeGrid.innerHTML = "";
+    type.recipes.forEach(function(recipe){
+      var card = document.createElement("button");
+      card.className = "recipe-card";
+      card.type = "button";
+      card.addEventListener("click", function(){
+        openLightbox(recipe.img, recipe.name);
+      });
+
+      var img = document.createElement("img");
+      img.src = recipe.img;
+      img.alt = recipe.name;
+      img.loading = "lazy";
+
+      var caption = document.createElement("span");
+      caption.textContent = recipe.name;
+
+      card.appendChild(img);
+      card.appendChild(caption);
+      recipeGrid.appendChild(card);
+    });
+    document.getElementById("adviceLine").textContent = type.advice;
+
+    if (hiddenGroup === group) {
+      document.getElementById("hiddenDesc").textContent = "隠れタイプも同じ" + type.kanji + "。芯までブレない一貫タイプです。";
+    } else {
+      document.getElementById("hiddenDesc").textContent = hiddenType.name + "（" + hiddenType.kanji + "）の一面も持ち合わせています。" + hiddenType.hidden;
+    }
+
+    resultCard.classList.remove("is-visible");
+    void resultCard.offsetWidth;
+    resultSection.classList.add("is-visible");
+    resultCard.style.animation = "none";
+    void resultCard.offsetWidth;
+    resultCard.style.animation = "";
+
+    resultSection.scrollIntoView({behavior:"smooth", block:"start"});
+  });
+
+  document.getElementById("retryBtn").addEventListener("click", function(){
+    resultSection.classList.remove("is-visible");
+    inputSection.scrollIntoView({behavior:"smooth", block:"start"});
+  });
+
+  var lightbox = document.getElementById("lightbox");
+  var lightboxImg = document.getElementById("lightboxImg");
+  var lightboxCaption = document.getElementById("lightboxCaption");
+
+  function openLightbox(src, caption){
+    lightboxImg.src = src;
+    lightboxImg.alt = caption;
+    lightboxCaption.textContent = caption;
+    lightbox.style.top = window.scrollY + "px";
+    lightbox.style.height = window.innerHeight + "px";
+    lightbox.classList.add("is-visible");
+    document.body.style.overflow = "hidden";
+  }
+  function closeLightbox(){
+    lightbox.classList.remove("is-visible");
+    lightboxImg.src = "";
+    document.body.style.overflow = "";
+  }
+  document.getElementById("lightboxClose").addEventListener("click", closeLightbox);
+  lightbox.addEventListener("click", function(e){
+    if (e.target === lightbox) closeLightbox();
+  });
+})();
+</script>

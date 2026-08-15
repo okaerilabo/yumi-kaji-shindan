@@ -229,11 +229,29 @@
     color:var(--ink);
     margin:0;
   }
+  .result-block p + p{ margin-top:10px; }
+
+  .tip-cta{
+    display:block;
+    text-align:center;
+    text-decoration:none;
+    font-family:inherit;
+    font-size:14.5px;
+    font-weight:700;
+    padding:14px;
+    border-radius:999px;
+    margin-top:14px;
+    background:var(--accent-base);
+    color:#fff;
+    box-shadow:var(--shadow);
+  }
 
   .recipe-grid{
     display:grid;
     grid-template-columns:repeat(3, 1fr);
     gap:8px;
+    max-width:220px;
+    margin:0 auto;
   }
   .recipe-card{
     display:flex;
@@ -402,6 +420,13 @@
         </div>
 
         <div class="result-block">
+          <h3>家事ラクのコツ</h3>
+          <p id="tipText"></p>
+          <p id="tipInvite"></p>
+          <a class="tip-cta" id="tipCta" href="https://forms.gle/PzMZVMT2tDrnWemD7" target="_blank" rel="noopener">参加をご希望の方はコチラ</a>
+        </div>
+
+        <div class="result-block">
           <h3>おすすめの時短レシピ</h3>
           <div class="recipe-grid" id="recipeGrid"></div>
           <p class="recipe-hint">タップすると大きく表示されます。長押しで保存してね</p>
@@ -443,10 +468,10 @@
       desc:"明るく行動力があり、勢いに乗ると一気に家事を片づけられるタイプ。反面、注目や達成感がないとモチベーションが続きにくい。",
       hidden:"じっとしているより、体を動かし始めた方がやる気が後からついてくるタイプです。",
       advice:"やる気を待つより、まず1品火にかけて動き出す。",
+      tip:"あなたは勢いに乗ると一気に片づけられる反面、やる気の波に左右されやすい傾向があるので、キッチンの引き出し1つ分だけを「出す→拭く→しまう」で5分間だけ整える「5分見直しワーク」がおすすめです。",
+      tipInvite:"「キッチンリセットの考え方」のコツを無料講座でお伝えしています。気になる方はぜひ参加してみてくださいね。",
       recipes:[
-        {img:"images/fire_1_塩麹唐揚げ.jpg", name:"塩麹唐揚げ"},
-        {img:"images/fire_2_じゃがいもの肉巻き.jpg", name:"じゃがいもの肉巻き"},
-        {img:"images/wood_3_かぼちゃと鶏もも肉のオーブン焼き.jpg", name:"かぼちゃと鶏もも肉のオーブン焼き"}
+        {img:"images/fire_1_塩麹唐揚げ.jpg", name:"塩麹唐揚げ"}
       ]
     },
     moon: {
@@ -455,10 +480,10 @@
       desc:"気分や心の状態に敏感で、丁寧に暮らしを整えるのが得意なタイプ。反面、気持ちが乗らない日は何も手につかなくなりやすい。",
       hidden:"栄養バランスや彩りなど「見えるもの」を整えると、気持ちも一緒に整うタイプです。",
       advice:"100点の献立より、心が動く1品を大事にする。",
+      tip:"あなたは気分や心の状態に敏感で、見えない場所に物があると気持ちまで乱れやすい傾向があるので、食材や調味料の残量をひと目でわかるようにする「冷蔵庫の見える化」がおすすめです。",
+      tipInvite:"「モノの把握」のコツを無料講座でお伝えしています。気になる方はぜひ参加してみてくださいね。",
       recipes:[
-        {img:"images/metal_1_青菜の胡麻和え.jpg", name:"青菜の胡麻和え"},
-        {img:"images/metal_3_えびと野菜のピラフ.jpg", name:"えびと野菜のピラフ"},
-        {img:"images/water_3_豆腐のネギ塩和え.jpg", name:"豆腐のネギ塩和え"}
+        {img:"images/metal_3_えびと野菜のピラフ.jpg", name:"えびと野菜のピラフ"}
       ]
     },
     earth: {
@@ -467,10 +492,10 @@
       desc:"地に足がついていて、コツコツ同じことを継続するのが得意なタイプ。反面、変化やイレギュラーな家事には弱く、崩れると立て直しに時間がかかる。",
       hidden:"平日は手を抜いていい、と自分に許可を出すと一気にラクになるタイプです。",
       advice:"丁寧さは仕込みに。平日は手放していい。",
+      tip:"あなたは同じことをコツコツ継続するのが得意な反面、毎回違う基準で迷うとブレやすい傾向があるので、「オーブンは180℃20分」のように基準を1つに固定してしまうのがおすすめです。",
+      tipInvite:"「料理の仕方」のコツを無料講座でお伝えしています。気になる方はぜひ参加してみてくださいね。",
       recipes:[
-        {img:"images/earth_1_白菜と豚バラの煮物.jpg", name:"白菜と豚バラの煮物"},
-        {img:"images/earth_2_ひじきの煮物.jpg", name:"ひじきの煮物"},
-        {img:"images/earth_3_切り干し大根と豚こまの煮物.jpg", name:"切り干し大根と豚こまの煮物"}
+        {img:"images/earth_1_白菜と豚バラの煮物.jpg", name:"白菜と豚バラの煮物"}
       ]
     }
   };
@@ -555,6 +580,8 @@
     document.getElementById("typeName").textContent = type.name;
     document.getElementById("typeKana").textContent = type.kanji + "（" + type.yomi + "）群";
     document.getElementById("typeDesc").textContent = type.desc;
+    document.getElementById("tipText").textContent = type.tip;
+    document.getElementById("tipInvite").innerHTML = type.tipInvite;
     var recipeGrid = document.getElementById("recipeGrid");
     recipeGrid.innerHTML = "";
     type.recipes.forEach(function(recipe){

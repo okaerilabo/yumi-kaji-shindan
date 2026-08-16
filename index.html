@@ -15,9 +15,10 @@
     --accent-base-2:#d5691a;
     --line:#ecdcbe;
 
-    --sun-accent:#e8791e;   --sun-tint:#fbe4cc;
-    --moon-accent:#8c5a3c;  --moon-tint:#f1ded0;
+    --fire-accent:#e8791e;  --fire-tint:#fbe4cc;
     --earth-accent:#93893c; --earth-tint:#f1ecd3;
+    --air-accent:#c9a227;   --air-tint:#f5ecc9;
+    --water-accent:#8c5a3c; --water-tint:#f1ded0;
 
     --accent: var(--accent-base);
     --card-bg: var(--paper-2);
@@ -112,7 +113,7 @@
     appearance:none;
     -webkit-appearance:none;
   }
-  select:focus-visible{ outline:3px solid var(--moon-accent); outline-offset:2px; }
+  select:focus-visible{ outline:3px solid var(--water-accent); outline-offset:2px; }
 
   .diagnose-btn{
     width:100%;
@@ -130,10 +131,10 @@
     transition:opacity .2s ease;
   }
   .diagnose-btn:disabled{ opacity:.4; cursor:not-allowed; }
-  .diagnose-btn:focus-visible{ outline:3px solid var(--moon-accent); outline-offset:3px; }
+  .diagnose-btn:focus-visible{ outline:3px solid var(--water-accent); outline-offset:3px; }
   .error-msg{
     font-size:13px;
-    color:var(--sun-accent);
+    color:var(--fire-accent);
     margin-top:10px;
     min-height:1em;
   }
@@ -354,7 +355,7 @@
   <div class="hero">
     <p class="eyebrow">ゆみ｜料理から叶える家事改善</p>
     <h1>生年月日でわかる<br><em>家事タイプ</em>診断</h1>
-    <p>個性心理学の「太陽・月・地球」タイプから、あなたの家事のクセと<br>相性のいいおすすめレシピを診断します。</p>
+    <p>西洋占星術の「火・地・風・水」タイプから、あなたの家事のクセと<br>相性のいいおすすめレシピを診断します。</p>
   </div>
 
   <section id="inputSection">
@@ -389,12 +390,12 @@
       <div class="result-card" id="resultCard">
         <svg class="emblem" width="72" height="72" viewBox="0 0 72 72" aria-hidden="true">
           <circle cx="36" cy="36" r="33"></circle>
-          <text x="36" y="38" id="emblemChar">陽</text>
+          <text x="36" y="38" id="emblemChar">火</text>
         </svg>
 
         <p class="zodiac-line" id="birthLine">1993年6月15日生まれ</p>
         <p class="type-name" id="typeName">のびのび成長タイプ</p>
-        <p class="type-kana" id="typeKana">太陽群</p>
+        <p class="type-kana" id="typeKana">双子座｜風のサイン</p>
 
         <div class="result-block">
           <h3>あなたの家事のクセ</h3>
@@ -441,11 +442,27 @@
 
 <script>
 (function(){
-  var GROUPS = ["sun", "moon", "earth"];
+  var GROUPS = ["fire", "earth", "air", "water"];
+
+  var ZODIAC = [
+    {end:[1,19],  sign:"山羊座", element:"earth"},
+    {end:[2,18],  sign:"水瓶座", element:"air"},
+    {end:[3,20],  sign:"魚座",   element:"water"},
+    {end:[4,19],  sign:"牡羊座", element:"fire"},
+    {end:[5,20],  sign:"牡牛座", element:"earth"},
+    {end:[6,21],  sign:"双子座", element:"air"},
+    {end:[7,22],  sign:"蟹座",   element:"water"},
+    {end:[8,22],  sign:"獅子座", element:"fire"},
+    {end:[9,22],  sign:"乙女座", element:"earth"},
+    {end:[10,23], sign:"天秤座", element:"air"},
+    {end:[11,21], sign:"蠍座",   element:"water"},
+    {end:[12,21], sign:"射手座", element:"fire"},
+    {end:[12,31], sign:"山羊座", element:"earth"}
+  ];
 
   var TYPES = {
-    sun: {
-      kanji:"陽", yomi:"たいよう",
+    fire: {
+      kanji:"火", yomi:"ひ",
       name:"みんなを照らすパワフルタイプ",
       desc:"明るく行動力があり、勢いに乗ると一気に家事を片づけられるタイプ。反面、注目や達成感がないとモチベーションが続きにくい。",
       hidden:"じっとしているより、体を動かし始めた方がやる気が後からついてくるタイプです。",
@@ -453,23 +470,11 @@
       tip:"あなたは勢いに乗ると一気に片づけられる反面、やる気の波に左右されやすい傾向があるので、キッチンの引き出し1つ分だけを「出す→拭く→しまう」で5分間だけ整える「5分見直しワーク」がおすすめです。",
       tipInvite:"「キッチンリセットの考え方」のコツを無料講座でお伝えしています。気になる方はぜひ参加してみてくださいね。",
       recipes:[
-        {img:"images/fire_1_塩麹唐揚げ.jpg", name:"塩麹唐揚げ"}
-      ]
-    },
-    moon: {
-      kanji:"月", yomi:"つき",
-      name:"感性でととのえるタイプ",
-      desc:"気分や心の状態に敏感で、丁寧に暮らしを整えるのが得意なタイプ。反面、気持ちが乗らない日は何も手につかなくなりやすい。",
-      hidden:"栄養バランスや彩りなど「見えるもの」を整えると、気持ちも一緒に整うタイプです。",
-      advice:"100点の献立より、心が動く1品を大事にする。",
-      tip:"あなたは気分や心の状態に敏感で、見えない場所に物があると気持ちまで乱れやすい傾向があるので、食材や調味料の残量をひと目でわかるようにする「冷蔵庫の見える化」がおすすめです。",
-      tipInvite:"「モノの把握」のコツを無料講座でお伝えしています。気になる方はぜひ参加してみてくださいね。",
-      recipes:[
-        {img:"images/metal_3_えびと野菜のピラフ.jpg", name:"えびと野菜のピラフ"}
+        {img:"images/fire_さつまいもグリル.jpg", name:"さつまいもグリル"}
       ]
     },
     earth: {
-      kanji:"地", yomi:"ちきゅう",
+      kanji:"地", yomi:"ち",
       name:"じっくり積み上げタイプ",
       desc:"地に足がついていて、コツコツ同じことを継続するのが得意なタイプ。反面、変化やイレギュラーな家事には弱く、崩れると立て直しに時間がかかる。",
       hidden:"平日は手を抜いていい、と自分に許可を出すと一気にラクになるタイプです。",
@@ -477,7 +482,31 @@
       tip:"あなたは同じことをコツコツ継続するのが得意な反面、毎回違う基準で迷うとブレやすい傾向があるので、「オーブンは180℃20分」のように基準を1つに固定してしまうのがおすすめです。",
       tipInvite:"「料理の仕方」のコツを無料講座でお伝えしています。気になる方はぜひ参加してみてくださいね。",
       recipes:[
-        {img:"images/earth_1_白菜と豚バラの煮物.jpg", name:"白菜と豚バラの煮物"}
+        {img:"images/wood_1_れんこんチップス.jpg", name:"レンコンチップス"}
+      ]
+    },
+    air: {
+      kanji:"風", yomi:"かぜ",
+      name:"軽やかに動く風通しタイプ",
+      desc:"情報収集や段取りを考えるのが得意で、効率よく物事を進められるタイプ。反面、興味が次々移りやすく、家事が中途半端になりがち。",
+      hidden:"1つのやり方に固執しない方が、実は長続きするタイプです。",
+      advice:"完璧な1つのやり方より、色んな方法を試していい。",
+      tip:"あなたは色んな情報や選択肢を楽しむ反面、決めるのに時間がかかったり気が散りやすい傾向があるので、手元の食材を並べて2〜3パターン考えてから調理法を決める「メニューの決め方」がおすすめです。",
+      tipInvite:"「メニューの決め方」のコツを無料講座でお伝えしています。気になる方はぜひ参加してみてくださいね。",
+      recipes:[
+        {img:"images/air_玉ねぎとにんじんのフリット.jpg", name:"玉ねぎとにんじんのフリット"}
+      ]
+    },
+    water: {
+      kanji:"水", yomi:"みず",
+      name:"感性でととのえるタイプ",
+      desc:"気分や心の状態に敏感で、丁寧に暮らしを整えるのが得意なタイプ。反面、気持ちが乗らない日は何も手につかなくなりやすい。",
+      hidden:"栄養バランスや彩りなど「見えるもの」を整えると、気持ちも一緒に整うタイプです。",
+      advice:"100点の献立より、心が動く1品を大事にする。",
+      tip:"あなたは気分や心の状態に敏感で、見えない場所に物があると気持ちまで乱れやすい傾向があるので、食材や調味料の残量をひと目でわかるようにする「冷蔵庫の見える化」がおすすめです。",
+      tipInvite:"「モノの把握」のコツを無料講座でお伝えしています。気になる方はぜひ参加してみてくださいね。",
+      recipes:[
+        {img:"images/fire_2_じゃがいもの肉巻き.jpg", name:"じゃがいもの肉巻き"}
       ]
     }
   };
@@ -527,12 +556,15 @@
   yearSelect.addEventListener("change", populateDays);
   monthSelect.addEventListener("change", populateDays);
 
-  function groupOf(month){
-    var idx = ((month - 1) % 3 + 3) % 3;
-    return GROUPS[idx];
+  function zodiacOf(month, day){
+    for (var i = 0; i < ZODIAC.length; i++){
+      var e = ZODIAC[i].end;
+      if (month < e[0] || (month === e[0] && day <= e[1])) return ZODIAC[i];
+    }
+    return ZODIAC[ZODIAC.length - 1];
   }
-  function hiddenGroupOf(day){
-    var idx = ((day - 1) % 3 + 3) % 3;
+  function hiddenGroupOf(year){
+    var idx = ((year % 4) + 4) % 4;
     return GROUPS[idx];
   }
 
@@ -547,16 +579,17 @@
     }
     errorMsg.textContent = "";
 
-    var group = groupOf(month);
+    var zodiac = zodiacOf(month, day);
+    var group = zodiac.element;
     var type = TYPES[group];
-    var hiddenGroup = hiddenGroupOf(day);
+    var hiddenGroup = hiddenGroupOf(year);
     var hiddenType = TYPES[hiddenGroup];
 
     document.getElementById("emblemChar").textContent = type.kanji;
     document.getElementById("resultCard").setAttribute("data-element", group);
     document.getElementById("birthLine").textContent = year + "年" + month + "月" + day + "日生まれ";
     document.getElementById("typeName").textContent = type.name;
-    document.getElementById("typeKana").textContent = type.kanji + "（" + type.yomi + "）群";
+    document.getElementById("typeKana").textContent = zodiac.sign + "｜" + type.kanji + "のサイン";
     document.getElementById("typeDesc").textContent = type.desc;
     document.getElementById("tipText").textContent = type.tip;
     document.getElementById("tipInvite").innerHTML = type.tipInvite;

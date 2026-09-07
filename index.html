@@ -215,21 +215,6 @@
   }
   .result-block p + p{ margin-top:10px; }
 
-  .tip-cta{
-    display:block;
-    text-align:center;
-    text-decoration:none;
-    font-family:inherit;
-    font-size:14.5px;
-    font-weight:700;
-    padding:14px;
-    border-radius:999px;
-    margin-top:14px;
-    background:var(--accent-base);
-    color:#fff;
-    box-shadow:var(--shadow);
-  }
-
   .recipe-grid{
     display:flex;
     justify-content:center;
@@ -405,8 +390,6 @@
         <div class="result-block">
           <h3>見直しおすすめポイント</h3>
           <p id="tipText"></p>
-          <p id="tipInvite"></p>
-          <a class="tip-cta" id="tipCta" href="https://forms.gle/PzMZVMT2tDrnWemD7" target="_blank" rel="noopener">参加をご希望の方はコチラ</a>
         </div>
 
         <div class="result-block">
@@ -592,7 +575,6 @@
     document.getElementById("typeKana").textContent = zodiac.sign + "｜" + type.kanji + "のサイン";
     document.getElementById("typeDesc").textContent = type.desc;
     document.getElementById("tipText").textContent = type.tip;
-    document.getElementById("tipInvite").innerHTML = type.tipInvite;
     var recipeGrid = document.getElementById("recipeGrid");
     recipeGrid.innerHTML = "";
     type.recipes.forEach(function(recipe){

@@ -89,13 +89,21 @@
     position:absolute;
     top:50%;
     left:50%;
-    transform:translate(-28%,-46%);  /* 少し右寄りに置く */
-    width:clamp(230px,64vw,330px);
+    transform:translate(-18%,-46%);  /* 右寄りに置く */
+    width:clamp(250px,70vw,340px);
     height:auto;
     opacity:.2;                      /* 線を薄くする（画像を加工せずCSSで調整） */
     mix-blend-mode:multiply;         /* 画像の白い背景をページになじませる */
     pointer-events:none;
     z-index:0;
+  }
+  /* スマホは絵を大きくして、右端がすこし画面の外に切れるようにする */
+  @media (max-width:430px){
+    .title-icon{
+      width:88vw;
+      left:66%;
+      transform:translate(-16%,-46%);
+    }
   }
   .hero p{
     max-width:32ch;

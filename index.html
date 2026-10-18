@@ -53,6 +53,8 @@
     padding:56px 22px 24px;
     text-align:center;
     border-bottom:1px solid var(--line);
+    position:relative;      /* 背景のアイコンを置くための土台 */
+    overflow:hidden;        /* はみ出した部分は隠す */
   }
   #inputSection{ padding-top:20px; }
   .eyebrow{
@@ -71,26 +73,29 @@
     letter-spacing:.1em;
     margin:0 0 20px;
     color:var(--ink);
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    gap:2px;
+    position:relative;  /* 背景のアイコンを置くときの基準 */
+  }
+  /* タイトルの文字は、背景の絵より前に出す */
+  .hero h1 span{
+    position:relative;
+    z-index:1;
   }
   .hero h1 em{
     font-style:normal;
     color:var(--accent-base);
   }
+  /* タイトルの背景に大きく薄く敷く地球の絵（透かしのように見せる） */
   .title-icon{
-    width:65px;
+    position:absolute;
+    top:50%;
+    left:50%;
+    transform:translate(-28%,-46%);  /* 少し右寄りに置く */
+    width:clamp(230px,64vw,330px);
     height:auto;
-    flex:none;
-    display:block;
-    mix-blend-mode:multiply; /* 画像の白い背景を、ページの背景になじませる */
-  }
-  /* スマホは横幅が狭いので、アイコンだけ少し小さくする（タイトルと窮屈にならないように） */
-  @media (max-width:430px){
-    .title-icon{ width:56px; }
-    .hero h1{ gap:0; }
+    opacity:.2;                      /* 線を薄くする（画像を加工せずCSSで調整） */
+    mix-blend-mode:multiply;         /* 画像の白い背景をページになじませる */
+    pointer-events:none;
+    z-index:0;
   }
   .hero p{
     max-width:32ch;
